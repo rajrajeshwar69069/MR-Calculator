@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5121605552585169"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MR CALCULATOR</title>
+    <title>MR Calculator</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,12 +14,100 @@
         
         body {
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            height: 100vh;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* MR Calculator Icon */
+        .mr-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        
+
+        .mr-icon:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .mr-icon-base {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mr-icon-screen {
+            width: 80%;
+            height: 25%;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            position: absolute;
+            top: 15%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .mr-icon-screen::after {
+            content: "MR";
+            position: absolute;
+            right: 10px;
+        }
+
+        .mr-icon-buttons {
+            position: absolute;
+            bottom: 15%;
+            width: 80%;
+            height: 55%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .mr-icon-button {
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.2s;
+        }
+
+        .mr-icon-button.operator {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .mr-icon-button.equals {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        /* Calculator Styles */
         .calculator {
             width: 320px;
             background-color: #2c3e50;
@@ -35,11 +121,23 @@
             background-color: #1a1a2e;
             color: #fff;
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        
+        .brand::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
         }
         
         .display {
@@ -48,21 +146,35 @@
             padding: 20px;
             text-align: right;
             font-size: 36px;
-            height: 100px;
+            height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+        }
+        
+        .display::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
         
         .previous-operand {
             font-size: 18px;
             color: rgba(255, 255, 255, 0.7);
             min-height: 24px;
+            word-break: break-all;
         }
         
         .current-operand {
+            font-size: 42px;
             word-wrap: break-word;
             word-break: break-all;
+            transition: all 0.2s;
         }
         
         .buttons {
@@ -70,6 +182,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 1px;
             background-color: #34495e;
+            padding: 1px;
         }
         
         button {
@@ -78,21 +191,53 @@
             font-size: 20px;
             cursor: pointer;
             background-color: #ecf0f1;
-            transition: all 0.2s;
+            transition: all 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        button:focus:not(:active)::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
         }
         
         button:hover {
-            background-color: #bdc3c7;
-            transform: scale(0.98);
+            background-color: #d6dbdf;
+            transform: translateY(-2px);
         }
         
         button:active {
-            transform: scale(0.95);
+            transform: translateY(0);
         }
         
         .operator {
             background-color: #3498db;
             color: white;
+            font-weight: bold;
         }
         
         .operator:hover {
@@ -103,6 +248,7 @@
             background-color: #2ecc71;
             color: white;
             grid-column: span 2;
+            font-weight: bold;
         }
         
         .equals:hover {
@@ -112,6 +258,7 @@
         .clear, .delete {
             background-color: #e74c3c;
             color: white;
+            font-weight: bold;
         }
         
         .clear:hover, .delete:hover {
@@ -121,11 +268,65 @@
         .span-2 {
             grid-column: span 2;
         }
+        
+        .number {
+            font-weight: bold;
+        }
+        
+        .decimal {
+            font-weight: bold;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .calculator {
+                width: 100%;
+                height: auto;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .buttons {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .mr-icon {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 <!-- Ad Code -->
 <script type='text/javascript' src='//pl26884798.profitableratecpm.com/a5/65/bc/a565bc8479ae0354104bad637518eac2.js'></script>
+    <!-- MR Calculator Icon -->
+    <div class="mr-icon" onclick="document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' })">
+        <div class="mr-icon-base">
+            <div class="mr-icon-screen"></div>
+            <div class="mr-icon-buttons">
+                <div class="mr-icon-button">7</div>
+                <div class="mr-icon-button">8</div>
+                <div class="mr-icon-button">9</div>
+                <div class="mr-icon-button operator">+</div>
+                <div class="mr-icon-button">4</div>
+                <div class="mr-icon-button">5</div>
+                <div class="mr-icon-button">6</div>
+                <div class="mr-icon-button operator">-</div>
+                <div class="mr-icon-button">1</div>
+                <div class="mr-icon-button">2</div>
+                <div class="mr-icon-button">3</div>
+                <div class="mr-icon-button operator">×</div>
+                <div class="mr-icon-button">0</div>
+                <div class="mr-icon-button">.</div>
+                <div class="mr-icon-button equals">=</div>
+                <div class="mr-icon-button operator">÷</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Container -->
     <div class="calculator">
         <div class="brand">MR CALCULATOR</div>
         <div class="display">
@@ -137,23 +338,23 @@
             <button class="delete" onclick="deleteNumber()">DEL</button>
             <button class="operator" onclick="appendOperator('/')">÷</button>
             
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
+            <button class="number" onclick="appendNumber('7')">7</button>
+            <button class="number" onclick="appendNumber('8')">8</button>
+            <button class="number" onclick="appendNumber('9')">9</button>
             <button class="operator" onclick="appendOperator('*')">×</button>
             
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
+            <button class="number" onclick="appendNumber('4')">4</button>
+            <button class="number" onclick="appendNumber('5')">5</button>
+            <button class="number" onclick="appendNumber('6')">6</button>
             <button class="operator" onclick="appendOperator('-')">-</button>
             
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
+            <button class="number" onclick="appendNumber('1')">1</button>
+            <button class="number" onclick="appendNumber('2')">2</button>
+            <button class="number" onclick="appendNumber('3')">3</button>
             <button class="operator" onclick="appendOperator('+')">+</button>
             
-            <button onclick="appendNumber('0')">0</button>
-            <button onclick="appendNumber('.')">.</button>
+            <button class="number" onclick="appendNumber('0')">0</button>
+            <button class="decimal" onclick="appendNumber('.')">.</button>
             <button class="equals span-2" onclick="calculate()">=</button>
         </div>
     </div>
@@ -162,6 +363,7 @@
         let currentOperand = '0';
         let previousOperand = '';
         let operation = undefined;
+        let resetScreen = false;
         
         const currentOperandElement = document.getElementById('current-operand');
         const previousOperandElement = document.getElementById('previous-operand');
@@ -177,17 +379,24 @@
         }
         
         function appendNumber(number) {
-            if (number === '.' && currentOperand.includes('.')) return;
-            if (currentOperand === '0' && number !== '.') {
-                currentOperand = number;
-            } else {
-                currentOperand += number;
+            if (currentOperand === '0' || resetScreen) {
+                currentOperand = '';
+                resetScreen = false;
             }
+            
+            if (number === '.' && currentOperand.includes('.')) return;
+            currentOperand += number;
             updateDisplay();
         }
         
         function appendOperator(op) {
+            if (currentOperand === '' && op === '-') {
+                currentOperand = '-';
+                updateDisplay();
+                return;
+            }
             if (currentOperand === '') return;
+            
             if (previousOperand !== '') {
                 calculate();
             }
@@ -198,6 +407,8 @@
         }
         
         function calculate() {
+            if (previousOperand === '' || operation === undefined) return;
+            
             let computation;
             const prev = parseFloat(previousOperand);
             const current = parseFloat(currentOperand);
@@ -220,10 +431,15 @@
                     return;
             }
             
-            currentOperand = computation.toString();
+            currentOperand = roundResult(computation).toString();
             operation = undefined;
             previousOperand = '';
+            resetScreen = true;
             updateDisplay();
+        }
+        
+        function roundResult(number) {
+            return Math.round(number * 10000) / 10000;
         }
         
         function clearAll() {
@@ -234,7 +450,7 @@
         }
         
         function deleteNumber() {
-            if (currentOperand.length === 1) {
+            if (currentOperand.length === 1 || (currentOperand.length === 2 && currentOperand.startsWith('-'))) {
                 currentOperand = '0';
             } else {
                 currentOperand = currentOperand.slice(0, -1);
@@ -252,6 +468,7 @@
                       event.key === '*' || event.key === '/') {
                 appendOperator(event.key);
             } else if (event.key === 'Enter' || event.key === '=') {
+                event.preventDefault();
                 calculate();
             } else if (event.key === 'Escape') {
                 clearAll();
